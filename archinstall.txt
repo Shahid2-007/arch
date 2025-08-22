@@ -15,4 +15,8 @@
 15. add the user to sudoers file by adding the line username ALL=(ALL:ALL) ALL just below the line root ALL=(ALL:ALL) ALL
 16. install the microcode with pacman -S intel-ucode or pacman -S amd-ucode
 17. install the bootloader with pacman -S grub efibootmgr
-18. create the directory with 
+18. create the efi directory with 'mkdir /boot/efi'
+19. mount the directory with mount /dev/efi-partition-block /boot/efi
+20. install grub on the efi partition with 'grub-install --target=x86_64-efi --bootloader-id=grub'
+21. run this command to save the changes 'grub-mkconfig -o /boot/grub/grub.cfg'
+22. now the bootloader is installed properly you can exit the chroot environment and umount the partitions and reboot to your newly installed arch base install

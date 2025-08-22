@@ -1,0 +1,18 @@
+1. Connect to the Internet
+2. partition the disk with gparted
+3. mount the disks except the efi mount it when you are going to install the bootloader
+4. update the mirrorlist to ultimately pacstrap the base install
+5. after updating the mirrorlist, run the command pacman -Sy
+6. Now, install the base system with pacstrap /mnt base base-devel linux linux-firmware sudo nano networkmanager
+7. generate the fstab file with genfstab -U /mnt | sudo tee -a /mnt/etc/fstab > /dev/null
+8. arch-chroot to the base system and run the command 'timedatectl set-timezone Asia/Kolkata'
+9. Edit the /etc/locale.gen, to select the default locale and run the locale-gen
+10. setup the netwokmanager you installed earlier with 'systemctl enable NetworkManager'
+11. set the hostname with echo 'hostname' | tee /etc/hostname
+12. set the root passwd with 'passwd' command
+13. create a user with useradd -aG wheel 'username'
+14. set the user passwd with 'passwd username'
+15. add the user to sudoers file by adding the line username ALL=(ALL:ALL) ALL just below the line root ALL=(ALL:ALL) ALL
+16. install the microcode with pacman -S intel-ucode or pacman -S amd-ucode
+17. install the bootloader with pacman -S grub efibootmgr
+18. create the directory with 

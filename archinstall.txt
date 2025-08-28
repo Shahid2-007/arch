@@ -20,3 +20,5 @@
 20. install grub on the efi partition with 'grub-install --target=x86_64-efi --bootloader-id=grub'
 21. run this command to save the changes 'grub-mkconfig -o /boot/grub/grub.cfg'
 22. now the bootloader is installed properly you can exit the chroot environment and umount the partitions and reboot to your newly installed arch base install
+
+nmcli device wifi connect SSID password "password"

